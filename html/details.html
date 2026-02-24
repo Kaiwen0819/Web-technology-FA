@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Details • Lost & Found</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">LF</div>
+        <div>
+          <h1 class="site-title">Campus Lost & Found</h1>
+          <p class="site-subtitle">Details</p>
+        </div>
+      </div>
+
+      <nav class="site-nav" aria-label="Primary">
+        <a class="nav-link" data-nav="home" href="index.html">Home</a>
+        <a class="nav-link" data-nav="report" href="report.html">Submit</a>
+        <a class="nav-link" data-nav="lost" href="lost.html">Lost</a>
+        <a class="nav-link" data-nav="found" href="found.html">Found</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section class="card">
+      <div class="card-head">
+        <strong id="title">Item Details</strong>
+        <span class="muted" id="subtitle"></span>
+      </div>
+
+      <div id="content"></div>
+
+      <div class="actions" id="actions" hidden>
+        <a class="btn btn-primary" id="editLink" href="#">Edit</a>
+        <button class="btn btn-ghost" id="statusBtn" type="button">Update Status</button>
+        <button class="btn btn-danger" id="deleteBtn" type="button">Delete</button>
+        <a class="btn btn-ghost" id="backLink" href="index.html">Back</a>
+      </div>
+
+      <div class="empty" id="empty" hidden>
+        <p>Item not found.</p>
+        <a class="btn btn-primary" href="index.html">Go Home</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> Campus Lost & Found</p>
+      <p class="muted">View + update + delete + edit</p>
+    </div>
+  </footer>
+
+  <script type="module" src="../js/details.js"></script>
+</body>
+</html>

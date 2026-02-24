@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Found Items • Lost & Found</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">LF</div>
+        <div>
+          <h1 class="site-title">Campus Lost & Found</h1>
+          <p class="site-subtitle">Found Items</p>
+        </div>
+      </div>
+
+      <nav class="site-nav" aria-label="Primary">
+        <a class="nav-link" data-nav="home" href="index.html">Home</a>
+        <a class="nav-link" data-nav="report" href="report.html">Submit</a>
+        <a class="nav-link" data-nav="lost" href="lost.html">Lost</a>
+        <a class="nav-link" data-nav="found" href="found.html">Found</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section class="card">
+      <div class="card-head">
+        <strong>Found Items</strong>
+        <span class="muted" id="count">0 items</span>
+      </div>
+
+      <div class="toolbar">
+        <div class="left">
+          <div class="control">
+            <label for="filterStatus">Status</label>
+            <select id="filterStatus">
+              <option value="All">All</option>
+              <option value="Active">Active</option>
+              <option value="Claimed">Claimed</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </div>
+
+          <div class="control">
+            <label for="sortBy">Sort</label>
+            <select id="sortBy">
+              <option value="newest">Newest date</option>
+              <option value="oldest">Oldest date</option>
+              <option value="titleAZ">Title A–Z</option>
+              <option value="titleZA">Title Z–A</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="control">
+            <label for="search">Search</label>
+            <input id="search" type="search" placeholder="Search title/location..." />
+          </div>
+
+          <a class="btn btn-primary" href="report.html">+ New</a>
+        </div>
+      </div>
+
+      <ul class="list" id="list" aria-live="polite"></ul>
+
+      <div class="empty" id="empty" hidden>
+        <p>No results. Create a new report.</p>
+        <a class="btn btn-primary" href="report.html">Submit</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> Campus Lost & Found</p>
+      <p class="muted">Read + update status + delete</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { setActiveNav, setYear } from "../js/common.js";
+    setActiveNav("found");
+    setYear();
+  </script>
+  <script type="module" src="../js/list.js"></script>
+</body>
+</html>
