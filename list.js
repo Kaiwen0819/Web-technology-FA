@@ -12,7 +12,7 @@ const searchInput = el("search");
 
 // 如果你之后部署到线上（Render/Railway/Vercel）
 // 把这里改成你的线上 URL，例如: https://xxx.onrender.com/api
-const API_BASE = "http://localhost:3000/api";
+const API_BASE = "https://web-technology-fa.onrender.com";
 
 function safeText(s) {
   return String(s ?? "")
