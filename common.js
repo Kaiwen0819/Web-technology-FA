@@ -22,7 +22,7 @@ export async function renderQuickStats() {
   const activeEl = document.getElementById("statActive");
 
   try {
-    const res = await fetch(`${API_BASE}/items`);
+    const res = await fetch(`${API_BASE}/api/items`);
     const data = await res.json();
 
     if (!res.ok || !data.ok) return;
