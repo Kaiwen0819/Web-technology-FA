@@ -6,7 +6,7 @@ setYear();
 
 const el = (id) => document.getElementById(id);
 
-const API_BASE = "http://localhost:3000/api";
+const API_BASE = "https://web-technology-fa.onrender.com";
 
 function safeText(s) {
   return String(s ?? "")
@@ -27,14 +27,14 @@ function nextStatus(current) {
 }
 
 async function apiGetItem(id) {
-  const res = await fetch(`${API_BASE}/items/${encodeURIComponent(id)}`);
+  const res = await fetch(`${API_BASE}/api/items/${encodeURIComponent(id)}`);
   const data = await res.json();
   if (!res.ok || !data.ok) throw new Error(data.msg || data.error || "Failed to load item");
   return data.item;
 }
 
 async function apiUpdateStatus(id, status) {
-  const res = await fetch(`${API_BASE}/items/${encodeURIComponent(id)}/status`, {
+  const res = await fetch(`${API_BASE}/api/items/${encodeURIComponent(id)}/status`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ status }),
@@ -45,7 +45,7 @@ async function apiUpdateStatus(id, status) {
 }
 
 async function apiDeleteItem(id) {
-  const res = await fetch(`${API_BASE}/items/${encodeURIComponent(id)}`, { method: "DELETE" });
+  const res = await fetch(`${API_BASE}/api/items/${encodeURIComponent(id)}`, { method: "DELETE" });
   const data = await res.json().catch(() => ({}));
   if (!res.ok || data.ok === false) throw new Error(data.msg || data.error || "Delete failed");
 }

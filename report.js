@@ -7,7 +7,7 @@ setYear();
 
 const el = (id) => document.getElementById(id);
 
-const API_BASE = "http://localhost:3000/api";
+const API_BASE = "https://web-technology-fa.onrender.com";
 
 const formTitle = el("formTitle");
 const toast = el("toast");
@@ -119,14 +119,14 @@ function getQueryId() {
 }
 
 async function apiGetItem(id) {
-  const res = await fetch(`${API_BASE}/items/${encodeURIComponent(id)}`);
+  const res = await fetch(`${API_BASE}/api/items/${encodeURIComponent(id)}`);
   const data = await res.json();
   if (!res.ok || !data.ok) throw new Error(data.msg || data.error || "Failed to load item");
   return data.item;
 }
 
 async function apiCreateItem(payload) {
-  const res = await fetch(`${API_BASE}/items`, {
+  const res = await fetch(`${API_BASE}/api/items`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -137,7 +137,7 @@ async function apiCreateItem(payload) {
 }
 
 async function apiUpdateItem(id, payload) {
-  const res = await fetch(`${API_BASE}/items/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${API_BASE}/api/items/${encodeURIComponent(id)}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
