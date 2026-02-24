@@ -12,7 +12,9 @@ const searchInput = el("search");
 
 // 如果你之后部署到线上（Render/Railway/Vercel）
 // 把这里改成你的线上 URL，例如: https://xxx.onrender.com/api
-const API_BASE = "https://web-technology-fa.onrender.com";
+
+
+const API_BASE = "https://web-technology-fa.onrender.com/api";
 
 function safeText(s) {
   return String(s ?? "")
@@ -46,21 +48,21 @@ function nextStatus(current) {
 }
 
 async function apiGetItems() {
-  const res = await fetch(`${API_BASE}/items`);
+  const res = await fetch(`${API_BASE}/api/items`);
   const data = await res.json();
   if (!res.ok || !data.ok) throw new Error(data.msg || data.error || "Failed to load items");
   return data.items || [];
 }
 
 async function apiDeleteItem(id) {
-  const res = await fetch(`${API_BASE}/items/${encodeURIComponent(id)}`, { method: "DELETE" });
+  const res = await fetch(`${API_BASE}/api/items/${encodeURIComponent(id)}`, { method: "DELETE" });
   const data = await res.json().catch(() => ({}));
   if (!res.ok || data.ok === false) throw new Error(data.msg || data.error || "Delete failed");
 }
 
 async function apiUpdateStatus(id, status) {
   // ✅ 这里用你后端的 PATCH /:id/status
-  const res = await fetch(`${API_BASE}/items/${encodeURIComponent(id)}/status`, {
+  const res = await fetch(`${API_BASE}/api/items/${encodeURIComponent(id)}/status`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ status }),
