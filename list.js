@@ -14,7 +14,7 @@ const searchInput = el("search");
 // 把这里改成你的线上 URL，例如: https://xxx.onrender.com/api
 
 
-const API_BASE = "https://web-technology-fa.onrender.com/api";
+const API_BASE = "https://web-technology-fa.onrender.com";
 
 function safeText(s) {
   return String(s ?? "")
