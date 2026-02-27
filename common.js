@@ -38,3 +38,24 @@ export async function renderQuickStats() {
     console.error("Failed to load stats:", err);
   }
 }
+
+import { getIdToken } from "./auth.js";
+
+export async function authFetch(url, options = {}) {
+  const token = await getIdToken();
+  const headers = {
+    ...(options.headers || {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+  return fetch(url, { ...options, headers });
+}
+
+import { logout } from "./auth.js";
+
+const btn = document.getElementById("btnLogout");
+if (btn) {
+  btn.addEventListener("click", async () => {
+    await logout();
+    location.href = "index.html"; // 你的 welcome 页
+  });
+}

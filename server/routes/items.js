@@ -3,6 +3,7 @@ import { body, param, query } from "express-validator";
 import xss from "xss";
 import { db } from "../firebase.js";
 import { validate } from "../middleware/validate.js";
+import requireAuth from "../middleware/requireAuth.js";
 
 const router = express.Router();
 const col = db.collection("items");
@@ -96,6 +97,7 @@ router.get(
 // POST /api/items
 router.post(
   "/",
+   requireAuth,
   [
     body("title").isString().isLength({ min: 3, max: 60 }),
     body("description").isString().isLength({ min: 10, max: 500 }),
@@ -118,6 +120,9 @@ router.post(
       referenceCode,
       createdAt: now,
       updatedAt: now,
+
+      ownerUid: req.user.uid,
+      ownerEmail: req.user.email,
     };
 
     await docRef.set(item);
@@ -128,6 +133,7 @@ router.post(
 // PUT /api/items/:id (edit whole item)
 router.put(
   "/:id",
+  requireAuth,
   [
     param("id").isString().isLength({ min: 6, max: 64 }),
     body("title").isString().isLength({ min: 3, max: 60 }),
@@ -145,6 +151,10 @@ router.put(
     if (!snap.exists) return res.status(404).json({ ok: false, msg: "Not found" });
 
     const existing = snap.data();
+
+    if (existing.ownerUid !== req.user.uid) {
+    return res.status(403).json({ ok: false, msg: "Forbidden" });
+}
     const now = Date.now();
 
     // category / referenceCode 不允许被改（保持你要求的 Lost item 1 / Found item 1 逻辑）
@@ -169,6 +179,7 @@ router.put(
 // PATCH /api/items/:id/status
 router.patch(
   "/:id/status",
+   requireAuth,
   [
     param("id").isString().isLength({ min: 6, max: 64 }),
     body("status").isIn(["Active", "Claimed", "Resolved"]),
@@ -179,6 +190,11 @@ router.patch(
     const docRef = col.doc(id);
     const snap = await docRef.get();
     if (!snap.exists) return res.status(404).json({ ok: false, msg: "Not found" });
+    const existing = snap.data();
+
+    if (existing.ownerUid !== req.user.uid) {
+      return res.status(403).json({ ok: false, msg: "Forbidden" });
+}
 
     await docRef.update({
       status: cleanText(req.body.status),
@@ -193,12 +209,19 @@ router.patch(
 // DELETE /api/items/:id
 router.delete(
   "/:id",
+  requireAuth,
   [param("id").isString().isLength({ min: 6, max: 64 }), validate],
   async (req, res) => {
     const id = req.params.id;
     const docRef = col.doc(id);
     const snap = await docRef.get();
     if (!snap.exists) return res.status(404).json({ ok: false, msg: "Not found" });
+
+    const existing = snap.data();
+
+    if (existing.ownerUid !== req.user.uid) {
+      return res.status(403).json({ ok: false, msg: "Forbidden" });
+}
 
     await docRef.delete();
     res.json({ ok: true });

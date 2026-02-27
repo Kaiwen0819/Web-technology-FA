@@ -2,6 +2,9 @@
 
 const el = (id) => document.getElementById(id);
 
+import { authFetch } from "./common.js";
+import { getCurrentUser, waitForAuthReady, requireLogin } from "./auth.js";
+
 const listEl = el("list");
 const countEl = el("count");
 const emptyEl = el("empty");
@@ -9,10 +12,6 @@ const emptyEl = el("empty");
 const filterStatus = el("filterStatus");
 const sortBy = el("sortBy");
 const searchInput = el("search");
-
-// 如果你之后部署到线上（Render/Railway/Vercel）
-// 把这里改成你的线上 URL，例如: https://xxx.onrender.com/api
-
 
 const API_BASE = "https://web-technology-fa.onrender.com";
 
@@ -48,21 +47,20 @@ function nextStatus(current) {
 }
 
 async function apiGetItems() {
-  const res = await fetch(`${API_BASE}/api/items`);
+  const res = await authFetch(`${API_BASE}/api/items`);
   const data = await res.json();
   if (!res.ok || !data.ok) throw new Error(data.msg || data.error || "Failed to load items");
   return data.items || [];
 }
 
 async function apiDeleteItem(id) {
-  const res = await fetch(`${API_BASE}/api/items/${encodeURIComponent(id)}`, { method: "DELETE" });
+  const res = await authFetch(`${API_BASE}/api/items/${encodeURIComponent(id)}`, { method: "DELETE" });
   const data = await res.json().catch(() => ({}));
   if (!res.ok || data.ok === false) throw new Error(data.msg || data.error || "Delete failed");
 }
 
 async function apiUpdateStatus(id, status) {
-  // ✅ 这里用你后端的 PATCH /:id/status
-  const res = await fetch(`${API_BASE}/api/items/${encodeURIComponent(id)}/status`, {
+  const res = await authFetch(`${API_BASE}/api/items/${encodeURIComponent(id)}/status`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ status }),
@@ -72,6 +70,15 @@ async function apiUpdateStatus(id, status) {
 }
 
 let allItems = [];
+
+function getCurrentUid() {
+  return getCurrentUser()?.uid || null;
+}
+
+function canEditItem(item) {
+  const uid = getCurrentUid();
+  return Boolean(uid && item?.ownerUid && item.ownerUid === uid);
+}
 
 function getFilteredSorted() {
   const category = pageCategory();
@@ -113,6 +120,8 @@ function renderList() {
     const li = document.createElement("li");
     li.className = "list-item";
 
+    const allowEdit = canEditItem(item);
+
     li.innerHTML = `
       <div class="top">
         <div>
@@ -125,10 +134,18 @@ function renderList() {
             <span class="badge ${badgeClass(item.status, "status")}">${safeText(item.status)}</span>
           </div>
         </div>
+
         <div class="actions">
           <a class="btn btn-ghost" href="details.html?id=${encodeURIComponent(item.id)}">Details</a>
-          <button class="btn btn-ghost" data-act="status" data-id="${item.id}">Update Status</button>
-          <button class="btn btn-danger" data-act="delete" data-id="${item.id}">Delete</button>
+
+          ${
+            allowEdit
+              ? `
+                <button class="btn btn-ghost" data-act="status" data-id="${item.id}">Update Status</button>
+                <button class="btn btn-danger" data-act="delete" data-id="${item.id}">Delete</button>
+              `
+              : ""
+          }
         </div>
       </div>
     `;
@@ -154,6 +171,15 @@ listEl.addEventListener("click", async (e) => {
   const id = btn.dataset.id;
   const act = btn.dataset.act;
 
+  // 双保险：就算别人用 devtools 硬插按钮，也挡掉
+  const item = allItems.find((x) => x.id === id);
+  if (!item) return;
+
+  if (!canEditItem(item)) {
+    alert("你没有权限修改这个 report（只有创建者可以）。");
+    return;
+  }
+
   try {
     if (act === "delete") {
       const yes = confirm("Delete this report?");
@@ -163,9 +189,6 @@ listEl.addEventListener("click", async (e) => {
     }
 
     if (act === "status") {
-      const item = allItems.find((x) => x.id === id);
-      if (!item) return;
-
       const next = nextStatus(item.status);
       await apiUpdateStatus(id, next);
       alert(`Status updated to ${next}`);
@@ -180,4 +203,8 @@ listEl.addEventListener("click", async (e) => {
 [filterStatus, sortBy].forEach((x) => x.addEventListener("change", renderList));
 searchInput.addEventListener("input", renderList);
 
-refresh();
+(async () => {
+  requireLogin();           // 未登录踢回 login
+  await waitForAuthReady(); // 等 Firebase 把 currentUser 填好
+  await refresh();          // 再加载列表
+})();

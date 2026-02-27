@@ -2,6 +2,11 @@
 
 import { setActiveNav, setYear } from "./common.js";
 
+import { authFetch } from "./common.js";
+
+import { requireLogin } from "./auth.js";
+requireLogin();
+
 setActiveNav("report");
 setYear();
 
@@ -119,14 +124,14 @@ function getQueryId() {
 }
 
 async function apiGetItem(id) {
-  const res = await fetch(`${API_BASE}/api/items/${encodeURIComponent(id)}`);
+  const res = await authFetch(`${API_BASE}/api/items/${encodeURIComponent(id)}`);
   const data = await res.json();
   if (!res.ok || !data.ok) throw new Error(data.msg || data.error || "Failed to load item");
   return data.item;
 }
 
 async function apiCreateItem(payload) {
-  const res = await fetch(`${API_BASE}/api/items`, {
+  const res = await authFetch(`${API_BASE}/api/items`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -137,7 +142,7 @@ async function apiCreateItem(payload) {
 }
 
 async function apiUpdateItem(id, payload) {
-  const res = await fetch(`${API_BASE}/api/items/${encodeURIComponent(id)}`, {
+  const res = await authFetch(`${API_BASE}/api/items/${encodeURIComponent(id)}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
