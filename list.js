@@ -48,7 +48,7 @@ function nextStatus(current) {
 
 async function apiGetItems() {
   const res = await authFetch(`${API_BASE}/api/items`);
-  const data = await res.json();
+  const data = await res.json().catch(() => ({}));
   if (!res.ok || !data.ok) throw new Error(data.msg || data.error || "Failed to load items");
   return data.items || [];
 }
@@ -114,6 +114,8 @@ function renderList() {
   listEl.innerHTML = "";
 
   countEl.textContent = `${items.length} item${items.length === 1 ? "" : "s"}`;
+
+  // ✅ 关键：有 items 就一定隐藏 empty
   emptyEl.hidden = items.length !== 0;
 
   for (const item of items) {
@@ -141,8 +143,8 @@ function renderList() {
           ${
             allowEdit
               ? `
-                <button class="btn btn-ghost" data-act="status" data-id="${item.id}">Update Status</button>
-                <button class="btn btn-danger" data-act="delete" data-id="${item.id}">Delete</button>
+                <button class="btn btn-ghost" data-act="status" data-id="${safeText(item.id)}">Update Status</button>
+                <button class="btn btn-danger" data-act="delete" data-id="${safeText(item.id)}">Delete</button>
               `
               : ""
           }
@@ -155,26 +157,22 @@ function renderList() {
 }
 
 async function refresh() {
-  try {
-    allItems = await apiGetItems();
-    renderList();
-  } catch (err) {
-    console.error(err);
-    alert(err.message || "Failed to load items");
-  }
+  allItems = await apiGetItems();
+  renderList();
 }
 
+// ✅ 事件委托：按钮点击（Delete / Update Status）
 listEl.addEventListener("click", async (e) => {
-  const btn = e.target.closest("button");
+  const btn = e.target.closest("button[data-act]");
   if (!btn) return;
 
   const id = btn.dataset.id;
   const act = btn.dataset.act;
 
-  // 双保险：就算别人用 devtools 硬插按钮，也挡掉
   const item = allItems.find((x) => x.id === id);
   if (!item) return;
 
+  // 双保险：不是 owner 直接挡
   if (!canEditItem(item)) {
     alert("你没有权限修改这个 report（只有创建者可以）。");
     return;
@@ -191,7 +189,6 @@ listEl.addEventListener("click", async (e) => {
     if (act === "status") {
       const next = nextStatus(item.status);
       await apiUpdateStatus(id, next);
-      alert(`Status updated to ${next}`);
       await refresh();
     }
   } catch (err) {
@@ -200,11 +197,20 @@ listEl.addEventListener("click", async (e) => {
   }
 });
 
+// 过滤 / 排序 / 搜索
 [filterStatus, sortBy].forEach((x) => x.addEventListener("change", renderList));
 searchInput.addEventListener("input", renderList);
 
+// ✅ 页面启动：等 auth ready + load data
 (async () => {
-  requireLogin();           // 未登录踢回 login
-  await waitForAuthReady(); // 等 Firebase 把 currentUser 填好
-  await refresh();          // 再加载列表
+  try {
+    await waitForAuthReady();
+    requireLogin();
+    await refresh();
+  } catch (err) {
+    console.error(err);
+    // 出错时：显示空状态作为 fallback
+    countEl.textContent = "0 items";
+    emptyEl.hidden = false;
+  }
 })();
