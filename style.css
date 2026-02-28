@@ -233,6 +233,11 @@ input:focus, select:focus, textarea:focus{
 
 .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
 
+/* ✅ 永远让 hidden 生效（防止被 .empty / 其他 display 覆盖） */
+[hidden] {
+  display: none !important;
+}
+
 .empty{
   margin-top:12px;
   padding:14px;
