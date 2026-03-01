@@ -275,3 +275,92 @@ input:focus, select:focus, textarea:focus{
   padding: 26px;
   text-align: center;
 }
+
+/* ===== Auth pages: make it less plain ===== */
+
+/* 更有层次的背景 + 2 个柔和光斑（不需要改 HTML） */
+body{
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(37,99,235,.22), transparent 60%),
+    radial-gradient(700px 420px at 90% 25%, rgba(220,38,38,.16), transparent 55%),
+    linear-gradient(180deg, #f6f8ff, #f3f4f8);
+  min-height: 100vh;
+}
+
+/* 卡片玻璃感 + 小动效 */
+.auth-card{
+  max-width: 460px;
+  margin: 72px auto;
+  padding: 28px;
+  text-align: center;
+
+  background: rgba(255,255,255,.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255,255,255,.55);
+  box-shadow:
+    0 18px 60px rgba(17,24,39,.12),
+    0 1px 0 rgba(255,255,255,.6) inset;
+
+  animation: floatIn .5s ease-out both;
+}
+
+@keyframes floatIn{
+  from { opacity: 0; transform: translateY(10px) scale(.99); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 标题更精致一点 */
+.auth-card h1,
+.auth-card h2{
+  margin: 0 0 10px;
+  letter-spacing: .2px;
+}
+
+.auth-card p{
+  color: var(--muted);
+}
+
+/* 输入框更“组件感” */
+.auth-card label{
+  text-align: left;
+  margin-top: 14px;
+}
+
+.auth-card input{
+  background: rgba(255,255,255,.85);
+  border-color: rgba(0,0,0,.08);
+}
+
+.auth-card input:hover{
+  border-color: rgba(37,99,235,.25);
+}
+
+/* 按钮更有主次层级 + hover 更明显 */
+.auth-card .btn{
+  height: 44px;
+  border-radius: 12px;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
+}
+
+.auth-card .btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(37,99,235,.12);
+}
+
+.auth-card a{
+  color: var(--primary);
+  text-decoration: none;
+}
+.auth-card a:hover{
+  text-decoration: underline;
+}
+
+/* 小屏幕更贴边一点 */
+@media (max-width: 520px){
+  .auth-card{
+    margin: 34px auto;
+    padding: 22px;
+  }
+}
