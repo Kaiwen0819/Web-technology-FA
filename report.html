@@ -42,7 +42,7 @@
 
           <div class="form-row">
             <label for="title">Title</label>
-            <input id="title" type="text" maxlength="60" required placeholder="e.g., Black Wallet" />
+            <input id="title" type="text" maxlength="60" required placeholder="e.g. Black Wallet" />
             <small class="field-hint">Max 60 characters.</small>
             <p class="field-error" id="errTitle" aria-live="polite"></p>
           </div>
@@ -50,7 +50,7 @@
           <div class="form-row">
             <label for="description">Description</label>
             <textarea id="description" rows="4" maxlength="500" required
-              placeholder="Describe the item and identifying details..."></textarea>
+              placeholder="Describe the item and identifying details."></textarea>
             <small class="field-hint">Max 500 characters.</small>
             <p class="field-error" id="errDescription" aria-live="polite"></p>
           </div>
@@ -76,7 +76,7 @@
           <div class="grid-2">
             <div class="form-row">
               <label for="location">Location</label>
-              <input id="location" type="text" maxlength="80" required placeholder="e.g., Library Level 2" />
+              <input id="location" type="text" maxlength="80" required placeholder="e.g. Library Level 2" />
               <p class="field-error" id="errLocation" aria-live="polite"></p>
             </div>
 
@@ -85,6 +85,19 @@
               <input id="contact" type="text" maxlength="120" required placeholder="Phone or email" />
               <small class="field-hint">Phone or email is acceptable.</small>
               <p class="field-error" id="errContact" aria-live="polite"></p>
+            </div>
+          </div>
+
+          <!-- ✅ Photo (optional) -->
+          <div class="form-row">
+            <label for="photo">Photo (optional)</label>
+            <input id="photo" type="file" accept="image/*" />
+            <small class="field-hint">Optional. Max 2MB.</small>
+            <div id="photoPreviewWrap" class="muted" style="margin-top:10px; display:none;">
+              <img id="photoPreview" alt="Preview" style="max-width:100%; border-radius:12px;" />
+              <div style="margin-top:8px;">
+                <button class="btn btn-ghost" type="button" id="clearPhotoBtn">Remove selected photo</button>
+              </div>
             </div>
           </div>
 
@@ -125,7 +138,7 @@
           <span class="muted">Verification-ready</span>
         </div>
         <ul class="muted">
-          <li>Use clear titles (e.g., “Blue Water Bottle”).</li>
+          <li>Use clear titles (e.g. “Blue Water Bottle”).</li>
           <li>Include unique identifiers (stickers, brand, scratches).</li>
           <li>Use accurate location and date.</li>
           <li>Status can be updated later.</li>

@@ -1,17 +1,16 @@
 "use strict";
 
 import { setActiveNav, setYear } from "./common.js";
-
 import { authFetch } from "./common.js";
-
 import { requireLogin } from "./auth.js";
+import { uploadPhotoAndGetUrl } from "./firebase-web.js";
+
 requireLogin();
 
 setActiveNav("report");
 setYear();
 
 const el = (id) => document.getElementById(id);
-
 const API_BASE = "https://web-technology-fa.onrender.com";
 
 const formTitle = el("formTitle");
@@ -27,7 +26,14 @@ const inputs = {
   contact: el("contact"),
   status: el("status"),
   confirm: el("confirm"),
+
+  // ✅ NEW
+  photo: el("photo"),
 };
+
+const photoPreviewWrap = el("photoPreviewWrap");
+const photoPreview = el("photoPreview");
+const clearPhotoBtn = el("clearPhotoBtn");
 
 const errors = {
   title: el("errTitle"),
@@ -49,12 +55,37 @@ function clearErrors() {
 }
 
 function nowISODate() {
-  // yyyy-mm-dd (local)
   const d = new Date();
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, "0");
   const dd = String(d.getDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
+}
+
+function showPreview(file) {
+  if (!photoPreviewWrap || !photoPreview) return;
+
+  if (!file) {
+    photoPreviewWrap.style.display = "none";
+    photoPreview.removeAttribute("src");
+    return;
+  }
+  const url = URL.createObjectURL(file);
+  photoPreview.src = url;
+  photoPreviewWrap.style.display = "";
+}
+
+if (inputs.photo) {
+  inputs.photo.addEventListener("change", () => {
+    showPreview(inputs.photo.files?.[0] || null);
+  });
+}
+
+if (clearPhotoBtn) {
+  clearPhotoBtn.addEventListener("click", () => {
+    if (inputs.photo) inputs.photo.value = "";
+    showPreview(null);
+  });
 }
 
 function validateForm() {
@@ -115,6 +146,13 @@ function validateForm() {
     ok = false;
   }
 
+  // ✅ optional photo size check
+  const file = inputs.photo?.files?.[0];
+  if (file && file.size > 2 * 1024 * 1024) {
+    setToast("Image too large. Please use < 2MB.", "error");
+    ok = false;
+  }
+
   return ok;
 }
 
@@ -138,7 +176,7 @@ async function apiCreateItem(payload) {
   });
   const data = await res.json();
   if (!res.ok || !data.ok) throw new Error(data.msg || data.error || "Create failed");
-  return data.item; // includes id + referenceCode
+  return data.item;
 }
 
 async function apiUpdateItem(id, payload) {
@@ -171,12 +209,14 @@ async function loadEditIfAny() {
     inputs.status.value = item.status ?? "Active";
     inputs.confirm.checked = true;
 
-    // category 不建议编辑（后端也不允许改 referenceCode 逻辑）
     inputs.category.disabled = true;
 
     formTitle.textContent = "Edit Report";
     el("submitBtn").textContent = "Update";
     setToast("Editing mode loaded.", "info");
+
+    // edit 不自动显示旧照片（旧照片在 details 看）
+    showPreview(null);
   } catch (err) {
     console.error(err);
     setToast("Item not found for editing.", "error");
@@ -193,12 +233,10 @@ el("reportForm").addEventListener("submit", async (e) => {
 
   const isEdit = Boolean(inputs.id.value);
 
-  // 注意：后端 POST 会自己加 referenceCode / createdAt / updatedAt
-  // PUT 需要你提供 title/description/location/date/contact/status（category 不改）
   const basePayload = {
     title: inputs.title.value.trim(),
     description: inputs.description.value.trim(),
-    category: inputs.category.value, // POST 需要；PUT 虽然不允许改但传也没关系（后端会覆盖回原本）
+    category: inputs.category.value,
     location: inputs.location.value.trim(),
     date: inputs.date.value,
     contact: inputs.contact.value.trim(),
@@ -207,6 +245,8 @@ el("reportForm").addEventListener("submit", async (e) => {
 
   try {
     let saved;
+
+    // 1) create / update item first
     if (!isEdit) {
       saved = await apiCreateItem(basePayload);
       setToast("Report submitted successfully.", "success");
@@ -216,7 +256,18 @@ el("reportForm").addEventListener("submit", async (e) => {
       setToast("Report updated successfully.", "success");
     }
 
-    // go to details after submit/update
+    // 2) optional photo upload
+    const file = inputs.photo?.files?.[0];
+    if (file) {
+      setToast("Uploading photo…", "info");
+      const imageUrl = await uploadPhotoAndGetUrl(saved.id, file);
+
+      // only update imageUrl if user selected a photo
+      saved = await apiUpdateItem(saved.id, { ...basePayload, imageUrl });
+      setToast("Photo uploaded.", "success");
+    }
+
+    // 3) go details
     window.location.href = `details.html?id=${encodeURIComponent(saved.id)}`;
   } catch (err) {
     console.error(err);
@@ -229,11 +280,11 @@ el("resetBtn").addEventListener("click", () => {
   inputs.date.value = nowISODate();
   inputs.category.disabled = false;
   clearErrors();
+  showPreview(null);
   setToast("Form reset.", "info");
 });
 
 el("seedBtn").addEventListener("click", async () => {
-  // Demo data: 连续 POST 2 条（Lost + Found）
   try {
     const today = nowISODate();
     const demo = [
@@ -257,9 +308,7 @@ el("seedBtn").addEventListener("click", async () => {
       },
     ];
 
-    for (const item of demo) {
-      await apiCreateItem(item);
-    }
+    for (const item of demo) await apiCreateItem(item);
 
     setToast("Demo data added to database.", "success");
   } catch (err) {

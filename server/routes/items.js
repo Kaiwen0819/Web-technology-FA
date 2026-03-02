@@ -39,6 +39,9 @@ function pickPayload(req) {
     date: cleanText(req.body.date),
     contact: cleanText(req.body.contact),
     status: cleanText(req.body.status),
+
+    // ✅ NEW (optional)
+    imageUrl: req.body.imageUrl ? cleanText(req.body.imageUrl) : "",
   };
 }
 
@@ -106,6 +109,7 @@ router.post(
     body("date").isString().isLength({ min: 8, max: 10 }),
     body("contact").isString().isLength({ min: 3, max: 120 }),
     body("status").isIn(["Active", "Claimed", "Resolved"]),
+    body("imageUrl").optional().isURL().isLength({ max: 600 }),
     validate,
   ],
   async (req, res) => {
@@ -142,6 +146,7 @@ router.put(
     body("date").isString().isLength({ min: 8, max: 10 }),
     body("contact").isString().isLength({ min: 3, max: 120 }),
     body("status").isIn(["Active", "Claimed", "Resolved"]),
+    body("imageUrl").optional().isURL().isLength({ max: 600 }),
     validate,
   ],
   async (req, res) => {
@@ -165,6 +170,9 @@ router.put(
       date: cleanText(req.body.date),
       contact: cleanText(req.body.contact),
       status: cleanText(req.body.status),
+
+      imageUrl: req.body.imageUrl ? cleanText(req.body.imageUrl) : (existing.imageUrl ?? ""),
+
       updatedAt: now,
       category: existing.category,
       referenceCode: existing.referenceCode,

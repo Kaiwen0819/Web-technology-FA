@@ -61,10 +61,11 @@ async function apiDeleteItem(id) {
   if (!res.ok || data.ok === false) throw new Error(data.msg || data.error || "Delete failed");
 }
 
-function showEmpty({ contentEl, actionsEl, emptyEl }) {
+function showEmpty({ contentEl, actionsEl, emptyEl, photoWrap }) {
   contentEl.innerHTML = "";
   actionsEl.hidden = true;
   emptyEl.hidden = false;
+  if (photoWrap) photoWrap.hidden = true;
 }
 
 function renderDetails({ titleEl, subtitleEl, contentEl }, item) {
@@ -84,6 +85,20 @@ function renderDetails({ titleEl, subtitleEl, contentEl }, item) {
   `;
 }
 
+function renderPhoto(item) {
+  const wrap = el("photoWrap");
+  const img = el("photoImg");
+  if (!wrap || !img) return;
+
+  if (item?.imageUrl) {
+    img.src = item.imageUrl;
+    wrap.hidden = false;
+  } else {
+    img.removeAttribute("src");
+    wrap.hidden = true;
+  }
+}
+
 async function main() {
   const id = getId();
 
@@ -92,6 +107,7 @@ async function main() {
   const contentEl = el("content");
   const actionsEl = el("actions");
   const emptyEl = el("empty");
+  const photoWrap = el("photoWrap");
 
   const backLink = el("backLink");
   const editLink = el("editLink");
@@ -99,7 +115,7 @@ async function main() {
   const deleteBtn = el("deleteBtn");
 
   if (!id) {
-    showEmpty({ contentEl, actionsEl, emptyEl });
+    showEmpty({ contentEl, actionsEl, emptyEl, photoWrap });
     return;
   }
 
@@ -108,20 +124,18 @@ async function main() {
     item = await apiGetItem(id);
   } catch (err) {
     console.error(err);
-    showEmpty({ contentEl, actionsEl, emptyEl });
+    showEmpty({ contentEl, actionsEl, emptyEl, photoWrap });
     return;
   }
 
-  // ✅ 关键：拿到 item 后一定隐藏 empty
   emptyEl.hidden = true;
 
   renderDetails({ titleEl, subtitleEl, contentEl }, item);
+  renderPhoto(item);
 
-  // Back link
   backLink.href = item.category === "Lost" ? "lost.html" : "found.html";
   editLink.href = `report.html?id=${encodeURIComponent(item.id)}`;
 
-  // ✅ 权限
   const allowEdit = canEditItem(item);
 
   actionsEl.hidden = false;
@@ -136,6 +150,7 @@ async function main() {
       const next = nextStatus(item.status);
       item = await apiUpdateStatus(item.id, next);
       renderDetails({ titleEl, subtitleEl, contentEl }, item);
+      renderPhoto(item);
     } catch (err) {
       console.error(err);
       alert(err.message || "Failed to update status");
