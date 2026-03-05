@@ -2,13 +2,42 @@
 
 import { setYear, setActiveNav } from "./common.js";
 import { authFetch } from "./common.js";
-import { getCurrentUser } from "./auth.js";
+import { getCurrentUser, waitForAuthReady } from "./auth.js";
 
 setYear();
 setActiveNav("");
 
 const el = (id) => document.getElementById(id);
 const API_BASE = "https://web-technology-fa.onrender.com";
+
+const navUserEmail = el("navUserEmail");
+
+const drawerUserEmail = el("drawerUserEmail");
+const openMenuBtn = el("openMenuBtn");
+const closeMenuBtn = el("closeMenuBtn");
+const sideDrawer = el("sideDrawer");
+const menuOverlay = el("menuOverlay");
+const btnLogout = el("btnLogout");
+
+function openMenu() {
+  sideDrawer?.classList.add("open");
+  menuOverlay?.classList.add("show");
+}
+
+function closeMenu() {
+  sideDrawer?.classList.remove("open");
+  menuOverlay?.classList.remove("show");
+}
+
+openMenuBtn?.addEventListener("click", openMenu);
+closeMenuBtn?.addEventListener("click", closeMenu);
+menuOverlay?.addEventListener("click", closeMenu);
+
+waitForAuthReady().then((user) => {
+  const email = user?.email || "Guest";
+  if (navUserEmail) navUserEmail.textContent = email;
+  if (drawerUserEmail) drawerUserEmail.textContent = email;
+});
 
 function safeText(s) {
   return String(s ?? "")

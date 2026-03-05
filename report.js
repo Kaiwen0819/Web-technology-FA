@@ -2,7 +2,7 @@
 
 import { setActiveNav, setYear } from "./common.js";
 import { authFetch } from "./common.js";
-import { requireLogin } from "./auth.js";
+import { requireLogin, waitForAuthReady } from "./auth.js";
 import { uploadPhotoAndGetUrl } from "./firebase-web.js";
 
 requireLogin();
@@ -10,8 +10,37 @@ requireLogin();
 setActiveNav("report");
 setYear();
 
-const el = (id) => document.getElementById(id);
+const el = (id) => document.getElementById(id);   // ✅ 先定义
 const API_BASE = "https://web-technology-fa.onrender.com";
+
+const navUserEmail = el("navUserEmail");
+
+const drawerUserEmail = el("drawerUserEmail");
+const openMenuBtn = el("openMenuBtn");
+const closeMenuBtn = el("closeMenuBtn");
+const sideDrawer = el("sideDrawer");
+const menuOverlay = el("menuOverlay");
+const btnLogout = el("btnLogout");
+
+function openMenu() {
+  sideDrawer?.classList.add("open");
+  menuOverlay?.classList.add("show");
+}
+
+function closeMenu() {
+  sideDrawer?.classList.remove("open");
+  menuOverlay?.classList.remove("show");
+}
+
+openMenuBtn?.addEventListener("click", openMenu);
+closeMenuBtn?.addEventListener("click", closeMenu);
+menuOverlay?.addEventListener("click", closeMenu);
+
+waitForAuthReady().then((user) => {
+  const email = user?.email || "Guest";
+  if (navUserEmail) navUserEmail.textContent = email;
+  if (drawerUserEmail) drawerUserEmail.textContent = email;
+});
 
 const formTitle = el("formTitle");
 const toast = el("toast");
@@ -292,9 +321,9 @@ el("seedBtn").addEventListener("click", async () => {
         title: "Blue Water Bottle",
         description: "Found at cafeteria table. Blue bottle with stickers.",
         category: "Found",
-        location: "Cafeteria",
+        location: "Laplace",
         date: today,
-        contact: "demo@example.com",
+        contact: "demo@qiu.edu.my",
         status: "Active",
       },
       {
@@ -308,12 +337,15 @@ el("seedBtn").addEventListener("click", async () => {
       },
     ];
 
-    for (const item of demo) await apiCreateItem(item);
+    for (const item of demo) {
+      await apiCreateItem(item);
+    }
 
-    setToast("Demo data added to database.", "success");
+    alert("Sample reports created successfully!");
+window.location.href = "lost.html";
   } catch (err) {
     console.error(err);
-    setToast(err.message || "Failed to add demo data.", "error");
+    setToast(err.message || "Failed to create demo data.", "error");
   }
 });
 

@@ -9,25 +9,52 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site-header">
-    <div class="container header-inner">
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<aside class="side-drawer" id="sideDrawer" aria-label="Sidebar navigation">
+  <div class="drawer-head">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">QIU</div>
+      <div>
+        <h1 class="site-title">Campus Lost & Found</h1>
+        <p class="site-subtitle">Navigation</p>
+      </div>
+    </div>
+    <button class="drawer-close" id="closeMenuBtn" aria-label="Close menu">✕</button>
+  </div>
+
+  <div class="drawer-user" id="drawerUserEmail">Signed in</div>
+
+  <nav class="drawer-nav">
+    <a class="drawer-link" data-drawer="home" href="home.html">Home</a>
+    <a class="drawer-link" data-drawer="report" href="report.html">Report</a>
+    <a class="drawer-link active" data-drawer="lost" href="lost.html">Lost</a>
+    <a class="drawer-link" data-drawer="found" href="found.html">Found</a>
+  </nav>
+
+  <div class="drawer-bottom">
+    <button class="drawer-logout" id="btnLogout">Logout</button>
+  </div>
+</aside>
+
+<header class="site-header compact-header">
+  <div class="container topbar">
+    <div class="topbar-left">
+      <button class="menu-btn" id="openMenuBtn" aria-label="Open menu">☰</button>
       <div class="brand">
         <div class="logo" aria-hidden="true">QIU</div>
         <div>
           <h1 class="site-title">Campus Lost & Found</h1>
-          <p class="site-subtitle">Lost Items</p>
+          <p class="site-subtitle">Lost</p>
         </div>
       </div>
-
-      <nav class="site-nav" aria-label="Primary">
-        <a class="nav-link" data-nav="home" href="home.html">Home</a>
-        <a class="nav-link" data-nav="report" href="report.html">Submit</a>
-        <a class="nav-link" data-nav="lost" href="lost.html">Lost</a>
-        <a class="nav-link" data-nav="found" href="found.html">Found</a>
-        <button class="nav-link" id="btnLogout">Logout</button>
-      </nav>
     </div>
-  </header>
+
+    <div class="topbar-right">
+      <span class="nav-user" id="navUserEmail">Signed in</span>
+    </div>
+  </div>
+</header>
 
   <main id="main" class="container">
     <section class="card">
@@ -62,7 +89,7 @@
         <div class="right">
           <div class="control">
             <label for="search">Search</label>
-            <input id="search" type="search" placeholder="Search title/location..." />
+            <input id="search" type="search" placeholder="Search title/ location..." />
           </div>
 
           <a class="btn btn-primary" href="report.html">+ New</a>
@@ -81,7 +108,7 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <p>© <span id="year"></span> Campus Lost & Found</p>
-      <p class="muted">Read + update status + delete</p>
+      <p class="muted">Campus reporting portal</p>
     </div>
   </footer>
 

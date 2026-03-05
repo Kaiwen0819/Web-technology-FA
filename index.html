@@ -3,28 +3,160 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome</title>
+  <title>Campus Lost & Found</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="landing-page brand-home">
 
-  <div class="card auth-card">
-    <h1>Lost & Found System</h1>
-    <p>
-      This system allows students to report lost or found items
-      and track their status securely.
-    </p>
+  <header class="brand-header">
+    <div class="brand-container brand-nav">
+      <div class="brand-logo-wrap">
+        <div class="brand-logo">QIU</div>
+        <div>
+          <h1 class="brand-name">Campus Lost & Found</h1>
+          <p class="brand-sub">QIU Student Portal</p>
+        </div>
+      </div>
 
-    <div style="margin-top:30px;">
-      <a href="login.html">
-        <button class="btn btn-primary" style="width:100%;margin-bottom:10px;">Login</button>
-      </a>
-
-      <a href="register.html">
-        <button class="btn btn-ghost" style="width:100%;">Register</button>
-      </a>
+      <div class="brand-nav-actions">
+        <a href="login.html" class="btn btn-ghost">Login</a>
+        <a href="register.html" class="btn btn-primary">Register</a>
+      </div>
     </div>
-  </div>
+  </header>
 
+  <main class="brand-main">
+    <section class="brand-hero brand-container">
+      <div class="brand-hero-copy">
+
+        <h2 class="brand-title">
+          Lost something on campus?<br />
+          Report it. Track it. Recover it.
+        </h2>
+
+        <p class="brand-description">
+          A smarter way to manage lost and found items across campus. Submit reports,
+          browse active listings, and follow status updates in one secure portal.
+        </p>
+
+        <div class="brand-cta">
+          <a href="register.html" class="btn btn-primary">Get Started</a>
+          <a href="login.html" class="btn btn-ghost">Login</a>
+        </div>
+
+        <div class="brand-trust">
+          <span>Fast reporting</span>
+          <span>Status tracking</span>
+          <span>Campus-only access</span>
+        </div>
+      </div>
+
+      <div class="brand-hero-panel">
+        <div class="brand-dashboard-card">
+          <div class="brand-dashboard-top">
+            <div>
+              <p class="dashboard-label">Overview</p>
+              <h3>Lost & Found Dashboard</h3>
+            </div>
+            <span class="dashboard-live">Live</span>
+          </div>
+
+          <div class="dashboard-stats">
+          <div class="dashboard-stat">
+            <span>Total Reports</span>
+            <strong id="statTotal">0</strong>
+          </div>
+          <div class="dashboard-stat">
+            <span>Active Cases</span>
+            <strong id="statActive">0</strong>
+          </div>
+          <div class="dashboard-stat">
+            <span>Lost Items</span>
+            <strong id="statLost">0</strong>
+          </div>
+          <div class="dashboard-stat">
+            <span>Found Items</span>
+            <strong id="statFound">0</strong>
+          </div>
+        </div>
+
+          <div class="dashboard-list">
+            <div class="dashboard-item">
+              <div>
+                <strong>Black Wallet</strong>
+                <p>Library Level 2 • Active</p>
+              </div>
+              <span class="status-pill active">Active</span>
+            </div>
+
+            <div class="dashboard-item">
+              <div>
+                <strong>Blue Water Bottle</strong>
+                <p>Cafeteria • Found</p>
+              </div>
+              <span class="status-pill found">Found</span>
+            </div>
+
+            <div class="dashboard-item">
+              <div>
+                <strong>Student ID Card</strong>
+                <p>Block A • Claimed</p>
+              </div>
+              <span class="status-pill claimed">Claimed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="brand-features brand-container">
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Report in seconds</h3>
+        <p>
+          Submit a lost or found item with title, location, date, contact details, and optional photo.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔎</div>
+        <h3>Browse by category</h3>
+        <p>
+          View separate lost and found listings, then quickly search and filter what matters most.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📌</div>
+        <h3>Track status updates</h3>
+        <p>
+          Keep reports updated when items are active, claimed, or resolved, all in one place.
+        </p>
+      </div>
+    </section>
+
+    <section class="brand-bottom-cta brand-container">
+      <div class="brand-bottom-card">
+        <div>
+          <span class="brand-badge">Ready to begin?</span>
+          <h3>Start using the Campus Lost & Found portal today.</h3>
+          <p>
+            Log in with your QIU email to submit reports and manage your items securely.
+          </p>
+        </div>
+
+        <div class="brand-cta">
+          <a href="login.html" class="btn btn-primary">Login</a>
+          <a href="register.html" class="btn btn-ghost">Register</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+  <script type="module">
+  import { renderQuickStats } from "./common.js";
+  renderQuickStats();
+</script>
 </body>
 </html>

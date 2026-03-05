@@ -3,34 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register</title>
+  <title>Register • Campus Lost & Found</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
 
-  <div class="card auth-card">
-    <h2>Register</h2>
+<body class="landing-page brand-home">
+  <header class="brand-header">
+    <div class="brand-container brand-nav">
+      <div class="brand-logo-wrap">
+        <div class="brand-logo">QIU</div>
+        <div>
+          <h1 class="brand-name">Campus Lost & Found</h1>
+          <p class="brand-sub">QIU Student Portal</p>
+        </div>
+      </div>
 
-    <label>Email</label>
-    <input id="email" type="email" placeholder="yourname@qiu.edu.my" required pattern="^[^@\s]+@qiu\.edu\.my$" />
+      <div class="brand-nav-actions">
+        <a href="index.html" class="btn btn-ghost">Back</a>
+        <a href="login.html" class="btn btn-primary">Login</a>
+      </div>
+    </div>
+  </header>
 
-    <label>Password</label>
-    <input id="password" type="password" placeholder="********" />
+  <main class="brand-main">
+    <section class="brand-container" style="display:grid; place-items:center; padding-top:26px;">
+      <div class="card auth-card" style="max-width:520px; width:100%;">
+        <h2 style="margin-top:10px;">Register</h2>
+        <p class="muted" style="margin-top:8px;">
+          Create an account using your QIU email.
+        </p>
 
-    <label>Confirm Password</label>
-    <input id="confirm" type="password" placeholder="********" />
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="yourname@qiu.edu.my"
+          required
+          pattern="^[^@\\s]+@qiu\\.edu\\.my$"
+        />
 
-    <button id="btnRegister" class="btn btn-primary" style="margin-top:14px;width:100%;">Register</button>
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="********"
+          required
+        />
 
-    <p style="margin-top:14px;">
-      Already have account?
-      <a href="login.html">Login</a>
-    </p>
+        <label for="confirm">Confirm Password</label>
+        <input
+          id="confirm"
+          type="password"
+          placeholder="********"
+          required
+        />
 
-    <p style="margin-top:6px;">
-      Back to <a href="index.html">Welcome</a>
-    </p>
-  </div>
+        <button id="btnRegister" class="btn btn-primary auth-submit">Register</button>
+
+        
+      </div>
+    </section>
+  </main>
 
   <script type="module" src="register.js"></script>
 </body>

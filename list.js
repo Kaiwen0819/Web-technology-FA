@@ -9,6 +9,29 @@ const listEl = el("list");
 const countEl = el("count");
 const emptyEl = el("empty");
 
+const navUserEmail = el("navUserEmail");
+
+const drawerUserEmail = el("drawerUserEmail");
+const openMenuBtn = el("openMenuBtn");
+const closeMenuBtn = el("closeMenuBtn");
+const sideDrawer = el("sideDrawer");
+const menuOverlay = el("menuOverlay");
+const btnLogout = el("btnLogout");
+
+function openMenu() {
+  sideDrawer?.classList.add("open");
+  menuOverlay?.classList.add("show");
+}
+
+function closeMenu() {
+  sideDrawer?.classList.remove("open");
+  menuOverlay?.classList.remove("show");
+}
+
+openMenuBtn?.addEventListener("click", openMenu);
+closeMenuBtn?.addEventListener("click", closeMenu);
+menuOverlay?.addEventListener("click", closeMenu);
+
 const filterStatus = el("filterStatus");
 const sortBy = el("sortBy");
 const searchInput = el("search");
@@ -204,12 +227,16 @@ searchInput.addEventListener("input", renderList);
 // ✅ 页面启动：等 auth ready + load data
 (async () => {
   try {
-    await waitForAuthReady();
+    const user = await waitForAuthReady();
     requireLogin();
+
+    const email = user?.email || "Guest";
+    if (navUserEmail) navUserEmail.textContent = email;
+    if (drawerUserEmail) drawerUserEmail.textContent = email;
+
     await refresh();
   } catch (err) {
     console.error(err);
-    // 出错时：显示空状态作为 fallback
     countEl.textContent = "0 items";
     emptyEl.hidden = false;
   }
