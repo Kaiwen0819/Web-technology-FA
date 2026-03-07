@@ -220,7 +220,10 @@ async function apiUpdateItem(id, payload) {
 }
 
 async function loadEditIfAny() {
-  inputs.date.value = nowISODate();
+  const today = nowISODate();
+
+  inputs.date.value = today;
+  inputs.date.max = today;
 
   const id = getQueryId();
   if (!id) return;
@@ -233,7 +236,7 @@ async function loadEditIfAny() {
     inputs.description.value = item.description ?? "";
     inputs.category.value = item.category ?? "";
     inputs.location.value = item.location ?? "";
-    inputs.date.value = item.date ?? nowISODate();
+    inputs.date.value = (item.date && item.date <= today) ? item.date : today;
     inputs.contact.value = item.contact ?? "";
     inputs.status.value = item.status ?? "Active";
     inputs.confirm.checked = true;
