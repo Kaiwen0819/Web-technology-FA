@@ -9,7 +9,7 @@ const router = express.Router();
 const col = db.collection("items");
 const counters = db.collection("counters");
 
-// 生成 L-001 / F-001（用 transaction 保证不会重复）
+// Generate L-001 / F-001 (using transactions to ensure no duplicates).
 async function nextRefCode(category) {
   const prefix = category === "Lost" ? "L" : "F";
   const counterDocId = category.toLowerCase(); // "lost" | "found"
@@ -162,7 +162,7 @@ router.put(
 }
     const now = Date.now();
 
-    // category / referenceCode 不允许被改（保持你要求的 Lost item 1 / Found item 1 逻辑）
+    // The category/referenceCode cannot be modified (keep the required Lost item 1/Found item 1 logic).
     const update = {
       title: cleanText(req.body.title),
       description: cleanText(req.body.description),

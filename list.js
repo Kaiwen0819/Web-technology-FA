@@ -138,7 +138,7 @@ function renderList() {
 
   countEl.textContent = `${items.length} item${items.length === 1 ? "" : "s"}`;
 
-  // ✅ 关键：有 items 就一定隐藏 empty
+  // ✅ Key point: If there are items, then empty must be hidden.
   emptyEl.hidden = items.length !== 0;
 
   for (const item of items) {
@@ -184,7 +184,7 @@ async function refresh() {
   renderList();
 }
 
-// ✅ 事件委托：按钮点击（Delete / Update Status）
+// ✅ Event delegation: Button click (Delete / Update Status)
 listEl.addEventListener("click", async (e) => {
   const btn = e.target.closest("button[data-act]");
   if (!btn) return;
@@ -195,9 +195,9 @@ listEl.addEventListener("click", async (e) => {
   const item = allItems.find((x) => x.id === id);
   if (!item) return;
 
-  // 双保险：不是 owner 直接挡
+  // Double insurance: If the owner is not the one who blocks it.
   if (!canEditItem(item)) {
-    alert("你没有权限修改这个 report（只有创建者可以）。");
+    alert("You do not have permission to modify this report (only the creator has permission).");
     return;
   }
 
@@ -220,11 +220,11 @@ listEl.addEventListener("click", async (e) => {
   }
 });
 
-// 过滤 / 排序 / 搜索
+// Filtering / Sorting / Searching
 [filterStatus, sortBy].forEach((x) => x.addEventListener("change", renderList));
 searchInput.addEventListener("input", renderList);
 
-// ✅ 页面启动：等 auth ready + load data
+// ✅ Page startup: Wait for auth ready + load data
 (async () => {
   try {
     const user = await waitForAuthReady();

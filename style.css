@@ -75,7 +75,7 @@ a{ color:inherit; text-decoration:none; }
   background: color-mix(in oklab, var(--primary) 16%, transparent);
 }
 
-/* 让 <button class="nav-link"> 跟 <a class="nav-link"> 一样 */
+/* Make <button class="nav-link"> the same as <a class="nav-link"> */
 button.nav-link{
   background: transparent;
   color: inherit;
@@ -233,7 +233,7 @@ input:focus, select:focus, textarea:focus{
 
 .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
 
-/* ✅ 永远让 hidden 生效（防止被 .empty / 其他 display 覆盖） */
+/* ✅ Always keep hidden enabled (to prevent it from being overridden by .empty or other display elements). */
 [hidden] {
   display: none !important;
 }
@@ -278,7 +278,7 @@ input:focus, select:focus, textarea:focus{
 
 /* ===== Auth pages: make it less plain ===== */
 
-/* 更有层次的背景 + 2 个柔和光斑（不需要改 HTML） */
+/* A more layered background + 2 soft light spots (no need to modify HTML) */
 body{
   background:
     radial-gradient(900px 500px at 15% 10%, rgba(37,99,235,.22), transparent 60%),
@@ -287,7 +287,7 @@ body{
   min-height: 100vh;
 }
 
-/* 卡片玻璃感 + 小动效 */
+/* Card-like glass feel + small animation effects */
 .auth-card{
   max-width: 460px;
   margin: 72px auto;
@@ -311,7 +311,7 @@ body{
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* 标题更精致一点 */
+/* Make the title more refined */
 .auth-card h1,
 .auth-card h2{
   margin: 0 0 10px;
@@ -322,7 +322,7 @@ body{
   color: var(--muted);
 }
 
-/* 输入框更“组件感” */
+/* The input box has a more "component-like" feel. */
 .auth-card label{
   text-align: left;
   margin-top: 14px;
@@ -337,7 +337,7 @@ body{
   border-color: rgba(37,99,235,.25);
 }
 
-/* 按钮更有主次层级 + hover 更明显 */
+/* Buttons have a clearer hierarchy and hover effect is more pronounced. */
 .auth-card .btn{
   height: 44px;
   border-radius: 12px;
@@ -357,7 +357,7 @@ body{
   text-decoration: underline;
 }
 
-/* 小屏幕更贴边一点 */
+/* The smaller screen is closer to the edge. */
 @media (max-width: 520px){
   .auth-card{
     margin: 34px auto;

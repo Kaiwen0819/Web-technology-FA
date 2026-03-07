@@ -10,7 +10,7 @@ requireLogin();
 setActiveNav("report");
 setYear();
 
-const el = (id) => document.getElementById(id);   // ✅ 先定义
+const el = (id) => document.getElementById(id);   // ✅ Define first
 const API_BASE = "https://web-technology-fa.onrender.com";
 
 const navUserEmail = el("navUserEmail");
@@ -247,7 +247,7 @@ async function loadEditIfAny() {
     el("submitBtn").textContent = "Update";
     setToast("Editing mode loaded.", "info");
 
-    // edit 不自动显示旧照片（旧照片在 details 看）
+    // Edit mode does not automatically display old photos (old photos can be viewed in details).
     showPreview(null);
   } catch (err) {
     console.error(err);
